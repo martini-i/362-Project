@@ -1,0 +1,71 @@
+---- A fashion & lifestyle e-commerce application for a brand like ZARA ----
+
+*********Using Django backend Server*******
+
+------ Test User created (Superuser)
+User: AlexIslas
+Pass: Dota2Budz34
+email: abislas@csu.fullerton.edu
+------
+
+
+-------------------------
+* NEED to install mysqlclient *
+open Djangos settings.py file
+look for DATABASE block
+replace the default SQLite with MySQL database settings
+
+# AN EXAMPLE OF THE BLOCK OF CODE:
+ DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'your_database_name',
+            'USER': 'your_mysql_user',
+            'PASSWORD': 'your_mysql_password',
+            'HOST': 'localhost',
+            'PORT': '3306',
+        }
+    }
+-------------------------
+
+
+
+Roles:
+- Database
+- User Profile
+- Products
+- Catalogue Item Page
+- Search Function
+- Shopping Cart
+- Checkout
+- Support Section
+- how to handle payments
+
+
+Layout:
+// User profile
+	- Contains ordered items
+	- User info: name, address, payment info?
+// Product Catalogue
+	- Can add, remove, update and delete an item
+	- Contains items for sale
+// Product Item page
+	- Show item information: Price, Size, Description, etc
+// Search function for product search
+	- Search bar, key word fill / close to key word
+// Shopping Cart
+	- Display items added to cart
+	- Display total cost of items
+	- Clickable items in cart go to product page listing
+	- BUTTON for checkout() displayed in cart tab.
+// Checkout
+	- Secure Checkout Standard Encryption?
+	- usual checkout layout: name, address, payment
+	- Show total cost of items, shipping, tax.
+	- Show order is accepted at the end of checkout
+// Support
+	- bottom of page contains Chat / Customer support
+
+
+// EXTRA CREDIT?
+	- Hosting on a platform, Remote Server?
