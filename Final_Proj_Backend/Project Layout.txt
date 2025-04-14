@@ -2,6 +2,12 @@
 
 *********Using Django backend Server*******
 
+------------------------
+Key Structure Components !!!(Refer to this site braking down how each .py file works in Django)!!!:
+
+https://dev.to/nadim_ch0wdhury/how-do-you-create-a-full-backend-api-for-an-ecommerce-website-using-python-django-2k7j
+------------------------
+
 ------ Test User created (Superuser)
 User: AlexIslas
 Pass: Dota2Budz34
