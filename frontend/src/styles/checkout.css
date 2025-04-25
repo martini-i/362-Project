@@ -1,0 +1,64 @@
+.checkout-page {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .checkout-page h1 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .order-summary {
+    margin-bottom: 40px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fafafa;
+  }
+  
+  .order-summary ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px 0;
+  }
+  
+  .order-summary li {
+    margin-bottom: 8px;
+  }
+  
+  .checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .checkout-form input,
+  .checkout-form textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .checkout-form textarea {
+    height: 120px;
+    resize: vertical;
+  }
+  
+  .checkout-form button {
+    padding: 12px;
+    font-size: 1rem;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .checkout-form button:hover {
+    background-color: #333;
+  }
+  

@@ -14,7 +14,7 @@ const Homepage = () => {
           <p>
             Elevate your performance with elite-level athletic wear built for winners.
           </p>
-          <Link to="/shop" className="cta-button">Shop Now</Link>
+          <Link to="/products" className="cta-button">Shop Now</Link>
         </div>
       </section>
 
@@ -40,7 +40,7 @@ const Homepage = () => {
         <p>
           From warmups to post-workout chill, Pursuit gear keeps up with your grind.
         </p>
-        <Link to="/shop" className="cta-button">Browse Collection</Link>
+        <Link to="/products" className="cta-button">Browse Collection</Link>
       </section>
 
     </div>
