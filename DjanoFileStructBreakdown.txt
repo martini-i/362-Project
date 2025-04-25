@@ -1,0 +1,25 @@
+FINAL_PROJ_BACKEND/
+│
+├── backend/                  ← Project config (Django settings)
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py           ✅ Should contain your project settings
+│   ├── urls.py               ✅ Main URL routes
+│   └── wsgi.py
+│
+├── catalog/                  ← Django app for your backend logic
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── migrations/           ✅ Automatically managed by Django
+│   ├── models.py
+│   ├── signals.py            ✅ Optional, nice addition!
+│   ├── tests.py              ✅ This is the correct place for app-specific tests
+│   ├── urls.py               ✅ Good to separate URLs per app
+│   └── views.py
+│
+├── env/                      ← Your virtual environment (optional to track)
+├── Templates/                ← Folder for HTML templates (good!)
+├── db.sqlite3                ← Your development database
+├── manage.py                 ✅ Django’s CLI entry point
+└── Project Layout.txt        ← Possibly your planning doc

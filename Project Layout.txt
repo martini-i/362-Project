@@ -34,6 +34,14 @@ replace the default SQLite with MySQL database settings
     }
 -------------------------
 
+Dependencies:
+- pip install Django
+- virtual environment used
+- pip install pytest pytest-django (This is for Test Cases)
+
+To run dev server with: (this is the little test I did earlier on)
+ - python manage.py runserver
+
 
 
 Roles:
