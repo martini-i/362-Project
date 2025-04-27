@@ -1,5 +1,5 @@
 # Pytest file
-# ------ Backend TestCases ------
+# ------ Backend TestCases -----
 
 import pytest
 from django.contrib.auth.models import User
