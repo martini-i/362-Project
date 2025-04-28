@@ -6,6 +6,7 @@ import { ShopCategory } from './Pages/ShopCategory';
 import { Product } from './Pages/Product';
 import { Cart } from './Pages/Cart';
 import { LoginSignup } from './Pages/LoginSignup';
+import { Profile } from './Pages/Profile'; // adjust if your path is slightly different
 
 function App() {
   return (
@@ -22,10 +23,11 @@ function App() {
         </Route>
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/login' element={<LoginSignup/>}/>
+        <Route path='/profile/:user_id' element={<Profile/>}/> {/* ✅ ADD THIS */}
       </Routes>
       </BrowserRouter>
     </div>
   );
 }
 
-export default App;
+export default App; 

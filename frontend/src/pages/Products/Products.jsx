@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CartContext } from '../../context/CartContext';
 import '../../styles/products.css';
 
 const Products = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState([]);
 
-  const products = [
-    { id: 1, name: 'Performance Hoodie', price: 59.99 },
-    { id: 2, name: 'Flex Fit Shorts', price: 39.99 },
-    { id: 3, name: 'Endurance Tee', price: 29.99 }
-  ];
+
+
+  //const [searchQuery, setSearchQuery] = useState('');
+
+  // const products = [
+  //   { id: 1, name: 'Performance Hoodie', price: 59.99 },
+  //   { id: 2, name: 'Flex Fit Shorts', price: 39.99 },
+  //   { id: 3, name: 'Endurance Tee', price: 29.99 }
+  // ];
+
+
 
   // Filter products based on search input
   const filteredProducts = products.filter((product) =>
