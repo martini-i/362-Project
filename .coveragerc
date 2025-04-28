@@ -1,0 +1,4 @@
+#.coveragerc file to remove virtual environment files from consideration
+
+[run]
+omit = */dist-packages/*
