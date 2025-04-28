@@ -72,13 +72,13 @@ def user_profile(request, user_id):
             return JsonResponse({
                 'username': user.username,
                 'email': user.email,
-                'bio': profile.bio,
+                'address': profile.address,
                 'phone': profile.phone
             })
 
         elif request.method == 'POST':
             data = json.loads(request.body)
-            profile.bio = data.get('bio', profile.bio)
+            profile.address = data.get('address', profile.address)
             profile.phone = data.get('phone', profile.phone)
             profile.save()
             return JsonResponse({'message': 'Profile updated successfully'})
@@ -122,7 +122,7 @@ def checkout(request):
             if not cart_items:
                 return JsonResponse({'error': 'Cart is empty'}, status=400)
 
-            total = sum(item.subtotal() for item in cart_items)
+            total = sum(item.total_price() for item in cart_items)
             order = Order.objects.create(user=user, total=total, created_at=timezone.now())
 
             for item in cart_items:
