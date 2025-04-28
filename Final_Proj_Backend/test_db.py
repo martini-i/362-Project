@@ -11,5 +11,9 @@ conn = mysql.connector.connect(
     password=config("DB_PASSWORD"),
     database=config("DB_NAME")
 )
-print("✅ Successfully connected to the database.")
+cursor = conn.cursor()
+cursor.execute("SHOW TABLES")
+tables = cursor.fetchall()
+print("Tables in ecommerce_db:", tables)
+cursor.close()
 conn.close()
