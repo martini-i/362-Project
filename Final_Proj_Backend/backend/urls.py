@@ -23,6 +23,6 @@ urlpatterns = [
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('catalog.urls')),
+    path('api/', include('catalog.urls')), # 'api/' added for appi connection to frontend
 ]
 
