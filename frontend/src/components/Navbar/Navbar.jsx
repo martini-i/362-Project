@@ -1,38 +1,34 @@
-import { Link } from 'react-router-dom';
-import '../../styles/navbar.css';
-import { useState } from 'react';
+import React, { useContext, useState } from 'react'
+import './Navbar.css'
 
-const Navbar = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+import logo from '../Assets/Pursuit Logo.png'
+import cart_icon from '../Assets/cart_icon.png'
+import { Link } from 'react-router-dom'
+import { ShopContext } from '../../Context/ShopContext'
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    console.log('Search for:', searchQuery);
-  };
+export const Navbar = () => {
+
+  const [menu,setMenu] = useState("shop");
+  const {getTotalCartItems} = useContext(ShopContext);
 
   return (
-    <nav className="navbar">
-      <div className="navbar-logo">
-        <Link to="/">Pursuit Athletics</Link>
-      </div>
+    <div className= 'navbar'>
+        <div className= "nav-Pursuit Logo">
+          <img src={logo} alt="" />
+        </div>
+        <ul className="nav-menu">
+          <li onClick={()=>{setMenu("shop")}}><Link style={{ textDecoration: 'none' }} to='/'>Shop</Link>{menu==="shop"?<hr/>:<></>}</li>
+          <li onClick={()=>{setMenu("mens")}}><Link style={{ textDecoration: 'none' }} to='/mens'>Men</Link>{menu==="mens"?<hr/>:<></>}</li>
+          <li onClick={()=>{setMenu("womens")}}><Link style={{ textDecoration: 'none' }} to='/womens'>Women</Link>{menu==="womens"?<hr/>:<></>}</li>
+          <li onClick={()=>{setMenu("kids")}}><Link style={{ textDecoration: 'none' }} to='/kids'>Kids</Link>{menu==="kids"?<hr/>:<></>}</li>
+        </ul>
+        <div className="nav-login-cart">
+            <Link to='/login'><button>Login</button></Link>
+            <Link to='/cart'><img src={cart_icon} alt="" /></Link>
+            <div className="nav-cart-count">{getTotalCartItems()}</div>
+        </div>
+    </div>
+  )
+}
 
-      <form onSubmit={handleSearchSubmit} className="navbar-search">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </form>
-
-      <ul className="navbar-links">
-        <li><Link to="/products">Shop</Link></li>
-        <li><Link to="/track">Track Order</Link></li>
-        <li><Link to="/login">Login</Link></li>
-        <li><Link to="/cart">Cart</Link></li>
-      </ul>
-    </nav>
-  );
-};
-
-export default Navbar;
+export default Navbar

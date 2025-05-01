@@ -1,39 +1,40 @@
-import { Link } from 'react-router-dom';
-import '../../styles/footer.css';
+import React from 'react'
+import './Footer.css'
+import logo from '../Assets/Pursuit Logo.png'
+import instagram_icon from '../Assets/instagram_icon.png'
+import pintester_icon from '../Assets/pintester_icon.png'
+import x_icon from '../Assets/x_icon.png'
 
-const Footer = () => {
+export const Footer = () => {
   return (
-    <footer className="footer">
-      <div className="footer-content">
-        <div>
-          <h3>Pursuit Athletics</h3>
-          <p>
-            Your source for premium athletic apparel. Designed to elevate your performance.
-          </p>
+    <div className='footer'>
+        <div className="footer-logo">
+            <img src={logo} alt="" />
         </div>
-        <div>
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/products">Shop</a></li>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/cart">Cart</a></li>
-          </ul>
+        <ul className="footer-links">
+            <li>Company</li>
+            <li>Products</li>
+            <li>Careers</li>
+            <li>About</li>
+            <li>Contact</li>
+        </ul>
+        <div className="footer-social-icon">
+            <div className="footer-icons-container">
+                <img src={instagram_icon} alt="" />
+            </div>
+            <div className="footer-icons-container">
+                <img src={pintester_icon} alt="" />
+            </div>
+            <div className="footer-icons-container">
+                <img src={x_icon} alt="" />
+            </div>
         </div>
-        <div>
-          <h4>Follow Us</h4>
-          <ul>
-            <li><a href="#">Instagram</a></li>
-            <li><a href="#">Twitter</a></li>
-            <li><a href="#">TikTok</a></li>
-          </ul>
+        <div className="footer-copyright">
+            <hr />
+            <p>Copyright 2025 - All Righst Reserved</p>
         </div>
-      </div>
-      <div className="footer-bottom">
-        &copy; {new Date().getFullYear()} Pursuit Athletics. All rights reserved.
-      </div>
-    </footer>
-  );
-};
+    </div>
+  )
+}
 
-export default Footer;
+export default Footer
