@@ -32,9 +32,11 @@ def signup_view(request):
                 return JsonResponse({'error': 'Username already taken'}, status=400)
 
             user = User.objects.create_user(username=username, password=password, email=email)
-            UserProfile.objects.create(user=user)  # Auto-create profile
+            UserProfile.objects.create(user=user)
             return JsonResponse({'message': 'User registered successfully'})
         except Exception as e:
+            import traceback
+            print(traceback.format_exc())  # ← Add this line
             return JsonResponse({'error': str(e)}, status=500)
 
 
