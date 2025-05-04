@@ -34,8 +34,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 
 # This is for DNS. Add a Domain Name when in final production is ready.
-ALLOWED_HOSTS = [] 
-
+ALLOWED_HOSTS = ['18.117.73.142', 'localhost', '127.0.0.1']
 
 # Application definition
 
