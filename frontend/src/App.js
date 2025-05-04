@@ -3,7 +3,7 @@ import { Navbar } from './Components/Navbar/Navbar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Shop } from './Pages/Shop';
 import  ShopCategory  from './Pages/ShopCategory';
-import  Product  from './Pages/Product';
+//import  Product  from './Pages/Product';
 import { Cart } from './Pages/Cart';
 import { LoginSignup } from './Pages/LoginSignup';
 import Footer from './Components/Footer/Footer';
@@ -13,6 +13,7 @@ import kid_banner from './Components/Assets/banner_kids.png'
 import SingleProductPage from './Pages/SingleProductPage';
 import Profile from './Pages/Profile';
 import OrderHistory from './Pages/OrderHistory';
+import Checkout from './Pages/Checkout';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path='/login' element={<LoginSignup />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/orders' element={<OrderHistory />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
       <Footer/>
       </BrowserRouter>

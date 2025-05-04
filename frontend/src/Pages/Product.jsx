@@ -18,7 +18,7 @@ export default function Products() {
 
   // Fetch catalog once on mount
   useEffect(() => {
-    apiFetch("/products/")
+    apiFetch("/api/products/")
       .then(setItems)
       .catch(err => setError(err.message || "Error fetching products"))
       .finally(() => setLoading(false));

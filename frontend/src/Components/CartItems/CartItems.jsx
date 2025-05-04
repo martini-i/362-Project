@@ -10,16 +10,16 @@ export const CartItems = () => {
 
   useEffect(() => {
     if (!user || !user.user_id) return;
-    fetch(`${import.meta.env.VITE_API_BASE}/cart/${user.user_id}/`)
+    fetch(`${import.meta.env.VITE_API_BASE}/api/cart/${user.user_id}/`)
       .then(res => res.json())
       .then(data => setCartItems(data))
       .catch(err => console.error("Error loading cart", err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [user]);
 
   const removeFromCart = async (productId) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/remove-from-cart/`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/remove-from-cart/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: user.user_id, product_id: productId })

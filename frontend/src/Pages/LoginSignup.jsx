@@ -8,7 +8,7 @@ export const LoginSignup = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/login/`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/login/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData)
@@ -27,7 +27,7 @@ export const LoginSignup = () => {
 
   const handleSignup = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/sign_up/`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/sign_up/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(signupData)
