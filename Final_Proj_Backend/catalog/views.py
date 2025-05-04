@@ -92,6 +92,27 @@ def user_profile(request, user_id):
 # --- CART + CHECKOUT VIEWS ---
 
 @csrf_exempt
+def get_cart(request, user_id):
+    try:
+        cart, _ = Cart.objects.get_or_create(user_id=user_id)
+        items = CartItem.objects.filter(cart=cart).select_related("product")
+        response = [
+            {
+                "product": {
+                    "id": item.product.id,
+                    "name": item.product.name,
+                    "price": str(item.product.price),
+                    "image": item.product.image.url if item.product.image else ""
+                },
+                "quantity": item.quantity
+            }
+            for item in items
+        ]
+        return JsonResponse(response, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@csrf_exempt
 def add_to_cart(request):
     if request.method == 'POST':
         try:
@@ -108,27 +129,93 @@ def add_to_cart(request):
             return JsonResponse({'message': 'Added to cart'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+        
+@csrf_exempt
+def remove_from_cart(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            user = User.objects.get(id=data["user_id"])
+            product = Product.objects.get(id=data["product_id"])
+            cart = Cart.objects.get(user=user)
+            CartItem.objects.filter(cart=cart, product=product).delete()
+            return JsonResponse({"message": "Item removed"})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
 
 
 @csrf_exempt
 def checkout(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
             data = json.loads(request.body)
-            user = User.objects.get(id=data['user_id'])
-            cart = get_object_or_404(Cart, user=user)
-            cart_items = CartItem.objects.filter(cart=cart)
+            user = User.objects.get(id=data["user_id"])
+            cart = Cart.objects.get(user=user)
+            items = CartItem.objects.filter(cart=cart)
 
-            if not cart_items:
-                return JsonResponse({'error': 'Cart is empty'}, status=400)
+            if not items.exists():
+                return JsonResponse({"error": "Cart is empty"}, status=400)
 
-            total = sum(item.total_price() for item in cart_items)
-            order = Order.objects.create(user=user, total=total, created_at=timezone.now())
-
-            for item in cart_items:
-                OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
-                item.delete()
-
-            return JsonResponse({'message': 'Order placed successfully', 'order_id': order.id})
+            order = Order.objects.create(user=user)
+            for item in items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price=item.product.price
+                )
+            items.delete()
+            return JsonResponse({"message": "Order placed successfully"})
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return JsonResponse({"error": str(e)}, status=500)
+
+def product_list(request):
+    products = Product.objects.all()
+    return JsonResponse([
+        {
+            'id': p.id,
+            'name': p.name,
+            'price': str(p.price),
+            'description': p.description,
+            'image': p.image.url if p.image else ''
+        }
+        for p in products
+    ], safe=False)
+
+def product_detail(request, product_id):
+    try:
+        p = Product.objects.get(id=product_id)
+        return JsonResponse({
+            'id': p.id,
+            'name': p.name,
+            'price': str(p.price),
+            'description': p.description,
+            'image': p.image.url if p.image else ''
+        })
+    except Product.DoesNotExist:
+        return JsonResponse({'error': 'Product not found'}, status=404)
+    
+@csrf_exempt
+def order_history(request, user_id):
+    try:
+        orders = Order.objects.filter(user_id=user_id).order_by('-created_at')
+        response = []
+        for order in orders:
+            items = OrderItem.objects.filter(order=order).select_related("product")
+            order_data = {
+                "id": order.id,
+                "created_at": order.created_at,
+                "items": [
+                    {
+                        "name": item.product.name,
+                        "quantity": item.quantity,
+                        "price": str(item.price),
+                        "image": item.product.image.url if item.product.image else ""
+                    }
+                    for item in items
+                ]
+            }
+            response.append(order_data)
+        return JsonResponse(response, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
