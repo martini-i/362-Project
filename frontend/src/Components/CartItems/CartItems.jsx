@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './CartItems.css';
 
 const apiBase = process.env.REACT_APP_API_BASE;
@@ -7,9 +7,9 @@ const CartItems = () => {
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0);
   const token = localStorage.getItem('token');
-  const userId = localStorage.getItem('user_id'); // Make sure this is set at login
+  const userId = localStorage.getItem('user_id'); // Ensure this is saved on login
 
-  const fetchCart = async () => {
+  const fetchCart = useCallback(async () => {
     try {
       const res = await fetch(`${apiBase}/cart/${userId}/`, {
         headers: {
@@ -17,18 +17,35 @@ const CartItems = () => {
         }
       });
       const data = await res.json();
-      setItems(data.items);
-      setTotal(data.total_price);
+      setItems(data.items || []);  // ✅ Fallback to empty array
+      setTotal(data.total_price || 0); // ✅ Fallback to 0
     } catch (err) {
       console.error('Failed to load cart:', err);
+      setItems([]);  // ✅ On error, clear cart
+      setTotal(0);
     }
-  };
+  }, [token, userId]); // ✅ Include in deps so no ESLint warnings
 
   useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const res = await fetch(`${apiBase}/cart/${userId}/`, {
+          headers: {
+            'Authorization': `Token ${token}`,
+          }
+        });
+        const data = await res.json();
+        setItems(data);
+      } catch (err) {
+        console.error('Failed to load cart:', err);
+      }
+    };
+  
     if (userId && token) {
       fetchCart();
     }
   }, [token, userId]);
+  
 
   const removeItem = async (productId) => {
     try {
@@ -42,8 +59,7 @@ const CartItems = () => {
       });
 
       if (res.ok) {
-        // Refresh cart
-        fetchCart();
+        fetchCart(); // Refresh after removing
       } else {
         const data = await res.json();
         alert(data.error || "Failed to remove item");
@@ -61,9 +77,9 @@ const CartItems = () => {
           'Authorization': `Token ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user_id: userId }) // match your Django backend expectations
+        body: JSON.stringify({ user_id: userId })
       });
-  
+
       if (res.ok) {
         alert("Order placed successfully!");
         setItems([]);
@@ -86,7 +102,7 @@ const CartItems = () => {
         <>
           <ul>
             {items.map((item) => (
-              <li key={item.id}>
+              <li key={item.product.id}>
                 <img src={item.product.image} alt={item.product.name} />
                 <div>
                   <p>{item.product.name}</p>

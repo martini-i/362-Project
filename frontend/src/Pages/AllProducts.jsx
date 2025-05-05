@@ -1,17 +1,11 @@
 import React, { useContext, useState } from 'react';
-import './CSS/ShopCategory.css';
+import './CSS/AllProducts.css';
 import { ShopContext } from '../Context/ShopContext';
 import Item from '../Components/Item/Item';
 
-export const ShopCategory = (props) => {
+export const AllProducts = () => {
   const { products } = useContext(ShopContext);
   const [sortOption, setSortOption] = useState("default");
-
-  const categoryName = props.category.trim().toLowerCase();
-
-  const filteredProducts = products.filter(
-    (item) => item.category?.trim().toLowerCase() === categoryName
-  );
 
   const sortProducts = (products) => {
     let sorted = [...products];
@@ -25,20 +19,27 @@ export const ShopCategory = (props) => {
     return sorted;
   };
 
-  const sortedProducts = sortProducts(filteredProducts);
+  const getFullImageUrl = (image) => {
+    if (!image) return '';
+    return image.startsWith('http') ? image : `http://18.117.73.142:8000${image}`;
+  };
+
+  const sortedProducts = sortProducts(products);
 
   return (
-    <div className="shop-category">
-      <img src={props.banner} alt="" />
+    <div className='shop-category'>
+      <h1 style={{ textAlign: "center", margin: "40px 0" }}>All Products</h1>
+
       <div className="shopcategory-indexSort">
         <p>
-          <span>Showing {sortedProducts.length}</span> products
+          <span>Showing {products?.length || 0}</span> products
         </p>
         <div className="shopcategory-sort">
           Sort by 
           <select 
             value={sortOption} 
             onChange={(e) => setSortOption(e.target.value)}
+            style={{ marginLeft: '10px', padding: '5px' }}
           >
             <option value="default">Default</option>
             <option value="newest">Newest</option>
@@ -51,7 +52,13 @@ export const ShopCategory = (props) => {
       <div className="shopcategory-products">
         {sortedProducts.length > 0 ? (
           sortedProducts.map((item, i) => (
-            <Item key={i} id={item.id} name={item.name} image={item.image} price={item.price} />
+            <Item 
+              key={i} 
+              id={item.id} 
+              name={item.name} 
+              image={getFullImageUrl(item.image)} 
+              price={item.price} 
+            />
           ))
         ) : (
           <p>Loading products...</p>
@@ -63,4 +70,4 @@ export const ShopCategory = (props) => {
   );
 };
 
-export default ShopCategory;
+export default AllProducts;

@@ -1,0 +1,22 @@
+.all-products {
+    padding: 40px;
+  }
+  
+  .all-products h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .all-products-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+  }
+  
+  .shopcategory-sort select {
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  

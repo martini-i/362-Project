@@ -8,7 +8,7 @@ const LoginSignup = () => {
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [signupData, setSignupData] = useState({ username: '', email: '', password: '' });
   const [message, setMessage] = useState('');
-  const { login } = useContext(AuthContext); // ✅ import login from context
+  const { login } = useContext(AuthContext);
 
   const handleLogin = async () => {
     try {
@@ -21,7 +21,9 @@ const LoginSignup = () => {
 
       if (res.ok) {
         localStorage.setItem('token', data.token);
-        login(data.user); // ✅ VERY IMPORTANT → Save user to context
+        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('user_id', data.user.id);
+        login(data.user);
         setMessage('Login successful!');
       } else {
         setMessage(data.error || 'Login failed');

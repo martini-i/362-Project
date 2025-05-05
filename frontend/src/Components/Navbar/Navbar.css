@@ -72,3 +72,24 @@
     background: red;
     color: white;
 }
+
+
+.nav-search {
+    display: flex;
+    align-items: center;
+}
+
+.nav-search input {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    font-size: 16px;
+    width: 220px;
+    transition: 0.3s ease;
+    outline: none;
+}
+
+.nav-search input:focus {
+    border-color: #ff4141;
+    box-shadow: 0 0 5px rgba(255, 65, 65, 0.5);
+}

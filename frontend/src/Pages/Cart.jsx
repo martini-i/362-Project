@@ -66,9 +66,6 @@ const Cart = () => {
     <div>
       <CartItems />
       <div className="text-center py-4">
-        <button onClick={handleCheckout} className="bg-indigo-600 text-white px-6 py-2 rounded">
-          Checkout
-        </button>
       </div>
     </div>
   );

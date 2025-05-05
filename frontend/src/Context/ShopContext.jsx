@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect } from "react";
-import { apiFetch } from "../lib/api";
 
 export const ShopContext = createContext(null);
 
@@ -7,31 +6,41 @@ const ShopContextProvider = (props) => {
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
 
-  // Fetch products and initialize cart
+  const apiBase = process.env.REACT_APP_API_BASE || "http://localhost:8000/api";
+
   useEffect(() => {
-    apiFetch("/products/")
-      .then((data) => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`${apiBase}/products/`);
+        const data = await response.json();
+
         setProducts(data);
-        const cart = {};
-        data.forEach((product) => {
-          cart[product.id] = 0;
+
+        const initialCart = {};
+        data.forEach(product => {
+          initialCart[product.id] = 0;
         });
-        setCartItems(cart);
-      })
-      .catch((err) => console.error("Error fetching products:", err));
-  }, []);
+        setCartItems(initialCart);
+
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [apiBase]);
 
   const addToCart = (itemId) => {
-    setCartItems((prev) => ({
+    setCartItems(prev => ({
       ...prev,
-      [itemId]: (prev[itemId] || 0) + 1,
+      [itemId]: (prev[itemId] || 0) + 1
     }));
   };
 
   const removeFromCart = (itemId) => {
-    setCartItems((prev) => ({
+    setCartItems(prev => ({
       ...prev,
-      [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
+      [itemId]: Math.max((prev[itemId] || 0) - 1, 0)
     }));
   };
 

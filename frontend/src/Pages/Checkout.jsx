@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const apiBase = process.env.REACT_APP_API_BASE;
 
 const Checkout = () => {
-  const { cartItems = {}, getTotalCartAmount = () => 0 } = useContext(ShopContext) || {};
+  const { cartItems, getTotalCartAmount } = useContext(ShopContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,29 +17,31 @@ const Checkout = () => {
 
   const handleCheckout = async () => {
     const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("user_id");
+
     if (!token) {
-      alert("Please log in to proceed with checkout.");
+      alert("Please login first.");
       return navigate("/login");
     }
 
-    const hasItems = Object.values(cartItems).some(qty => qty > 0);
-    if (!hasItems) {
+    if (!cartItems.length) {
       alert("Cart is empty.");
       return;
     }
 
     try {
-      const response = await fetch(`${apiBase}/checkout/`, {
+      const res = await fetch(`${apiBase}/checkout/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`
-        }
+          "Authorization": `Token ${token}`,
+        },
+        body: JSON.stringify({ user_id: userId }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (response.ok) {
+      if (res.ok) {
         alert("Order placed successfully!");
         navigate("/");
       } else {

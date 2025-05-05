@@ -18,7 +18,7 @@ export const Popular = () => {
     <div className='popular'>
       <h1>Popular Items</h1>
       <hr />
-      <div className="popular-item">
+      <div className="popular-slider">
         {products.map((item, i) => (
           <Item key={i} id={item.id} name={item.name} image={item.image} price={item.price} />
         ))}

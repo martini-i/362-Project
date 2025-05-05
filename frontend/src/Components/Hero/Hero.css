@@ -40,7 +40,7 @@
     
   }
   
-  .hero-latest-btn{
+  .hero-latest-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -49,8 +49,16 @@
     height: 70px;
     border-radius: 75px;
     margin-top: 30px;
-    background: #ff4141;
+    background-color: #ff4141;
     color: white;
     font-size: 22px;
     font-weight: 500;
-  }
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.hero-latest-btn:hover {
+    background-color: #e13838;
+    text-decoration: none;
+}

@@ -24,3 +24,24 @@
     display: flex;
     gap: 30px;
 }
+
+.popular-slider {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 10px;
+    scroll-behavior: smooth;
+}
+
+.popular-slider::-webkit-scrollbar {
+    height: 8px;
+}
+
+.popular-slider::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+.popular-slider::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+}
