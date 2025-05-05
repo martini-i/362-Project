@@ -1,11 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+CATEGORY_CHOICES = [
+    ('men', 'Men'),
+    ('women', 'Women'),
+    ('kid', 'Kid'),
+]
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='product_images/')
+    image = models.ImageField(upload_to='product_images/', null=True, blank=True)
+    category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, default='women')
 
     def __str__(self):
         return self.name
@@ -38,7 +45,7 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def total_price(self):
-        return self.product.price * self.quantity
+        return self.price * self.quantity
 
 class UserProfile(models.Model): # User
     user = models.OneToOneField(User, on_delete=models.CASCADE)
