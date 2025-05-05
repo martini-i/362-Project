@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CartItems from '../Components/CartItems/CartItems';
 
 export const Cart = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
   const handleCheckout = async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) {
+    const token = localStorage.getItem("token");
+    if (!token) {
       alert("You must be logged in to check out.");
       return;
     }
@@ -12,10 +22,14 @@ export const Cart = () => {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE}/checkout/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: user.user_id })
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`
+        }
       });
+
       const data = await res.json();
+
       if (res.ok) {
         alert("Order placed successfully!");
         window.location.reload();

@@ -15,7 +15,8 @@ export const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    navigate('/login'); // or use '/' if you'd prefer
+    localStorage.removeItem("token"); // 🔐 remove token too
+    navigate('/login');
   };
 
   return (

@@ -1,21 +1,30 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function OrderHistory() {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user || !user.user_id) {
-      setError("You must be logged in.");
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
       return;
     }
 
-    fetch(`${import.meta.env.VITE_API_BASE}/orders/${user.user_id}/`)
-      .then(res => res.json())
+    fetch(`${import.meta.env.VITE_API_BASE}/orders/`, {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Unauthorized");
+        return res.json();
+      })
       .then(setOrders)
       .catch(() => setError("Failed to load orders"));
-  }, []);
+  }, [navigate]);
 
   if (error) return <p>{error}</p>;
   if (!orders.length) return <p>No orders found.</p>;
@@ -29,9 +38,9 @@ export default function OrderHistory() {
           <p className="text-sm text-gray-500">Placed: {new Date(order.created_at).toLocaleString()}</p>
           {order.items.map((item, i) => (
             <div key={i} className="flex items-center gap-4 py-2 border-b">
-              <img src={item.image} alt={item.name} className="w-12 h-12 object-cover" />
+              <img src={item.product.image} alt={item.product.name} className="w-12 h-12 object-cover" />
               <div>
-                <p>{item.name}</p>
+                <p>{item.product.name}</p>
                 <p className="text-sm">Qty: {item.quantity} × ${item.price}</p>
               </div>
             </div>
