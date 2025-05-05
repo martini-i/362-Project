@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { apiFetch } from "../lib/api"; // Wrapper around fetch with VITE_API_BASE_URL
+import { apiFetch } from "../lib/api";
 
 export const ShopContext = createContext(null);
 
@@ -10,28 +10,28 @@ const ShopContextProvider = (props) => {
   // Fetch products and initialize cart
   useEffect(() => {
     apiFetch("/api/products/")
-      .then(data => {
+      .then((data) => {
         setProducts(data);
         const cart = {};
-        data.forEach(product => {
+        data.forEach((product) => {
           cart[product.id] = 0;
         });
         setCartItems(cart);
       })
-      .catch(err => console.error("Error fetching products:", err));
+      .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
   const addToCart = (itemId) => {
-    setCartItems(prev => ({
+    setCartItems((prev) => ({
       ...prev,
-      [itemId]: (prev[itemId] || 0) + 1
+      [itemId]: (prev[itemId] || 0) + 1,
     }));
   };
 
   const removeFromCart = (itemId) => {
-    setCartItems(prev => ({
+    setCartItems((prev) => ({
       ...prev,
-      [itemId]: Math.max((prev[itemId] || 0) - 1, 0)
+      [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
     }));
   };
 

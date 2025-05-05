@@ -1,6 +1,11 @@
+const apiBase = process.env.REACT_APP_API_BASE;
+
 export const apiFetch = (path, opts = {}) =>
-  fetch(`${import.meta.env.VITE_API_BASE_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
+  fetch(`${apiBase}${path}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(opts.headers || {}),
+    },
     credentials: 'include',
     ...opts,
-  }).then(r => r.json());
+  }).then((r) => r.json());
