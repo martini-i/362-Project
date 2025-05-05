@@ -18,9 +18,11 @@ const Navbar = () => {
 
   return (
     <div className='navbar'>
-      <div className="nav-logo" onClick={() => navigate("/")}>
+    <div className="nav-logo">
+      <Link to="/">
         <img src={logo} alt="logo" />
-      </div>
+      </Link>
+    </div>
 
       <ul className="nav-menu">
         <li><Link to="/">Shop</Link></li>

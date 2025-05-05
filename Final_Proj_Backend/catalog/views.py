@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -7,17 +7,9 @@ from django.utils import timezone
 from .models import Product, Cart, CartItem, Order, OrderItem, UserProfile
 import json
 
-# NOTES #
-## @csrf_exempt disables Django's default Cross-Site Request Forgery (CSRF) protection for this view.
-# CSRF is a security feature that prevents malicious websites from making unwanted actions on behalf of a logged-in user.
-# Normally, Django requires a special token to be included in POST requests for safety.
-# Since this view receives JSON data (likely from a frontend app like React or a testing tool like Postman),
-# and not from a standard Django form, CSRF protection is manually bypassed here.
-# ⚠️ Use @csrf_exempt carefully—only when you're handling security in other ways (like using authentication tokens),
-# especially in production environments.
-
-
-# --- USER AUTH VIEWS ---
+# ------------------------------
+# USER AUTH VIEWS
+# ------------------------------
 
 @csrf_exempt
 def signup_view(request):
@@ -33,18 +25,9 @@ def signup_view(request):
 
             user = User.objects.create_user(username=username, password=password, email=email)
             UserProfile.objects.create(user=user)
-
-            # Automatically login the user after signup
-            login(request, user)
-
-            return JsonResponse({
-                'message': 'User registered successfully',
-                'user_id': user.id
-            })
+            return JsonResponse({'message': 'User registered successfully'})
 
         except Exception as e:
-            import traceback
-            print(traceback.format_exc())
             return JsonResponse({'error': str(e)}, status=500)
 
 @csrf_exempt
@@ -58,7 +41,6 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
-
                 return JsonResponse({
                     'message': 'Login successful',
                     'user': {
@@ -69,15 +51,14 @@ def login_view(request):
                 })
             else:
                 return JsonResponse({'error': 'Invalid credentials'}, status=400)
+
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-
 
 @csrf_exempt
 def logout_view(request):
     logout(request)
     return JsonResponse({'message': 'Logged out successfully'})
-
 
 @csrf_exempt
 def user_profile(request, user_id):
@@ -105,8 +86,41 @@ def user_profile(request, user_id):
     except UserProfile.DoesNotExist:
         return JsonResponse({'error': 'User profile not found'}, status=404)
 
+# ------------------------------
+# PRODUCT VIEWS
+# ------------------------------
 
-# --- CART + CHECKOUT VIEWS ---
+def product_list(request):
+    products = Product.objects.all()
+    return JsonResponse([
+        {
+            'id': p.id,
+            'name': p.name,
+            'price': str(p.price),
+            'description': p.description,
+            'image': request.build_absolute_uri(p.image.url) if p.image else '',
+            'category': p.category if hasattr(p, 'category') else ''  # optional
+        }
+        for p in products
+    ], safe=False)
+
+def product_detail(request, product_id):
+    try:
+        p = Product.objects.get(id=product_id)
+        return JsonResponse({
+            'id': p.id,
+            'name': p.name,
+            'price': str(p.price),
+            'description': p.description,
+            'image': request.build_absolute_uri(p.image.url) if p.image else '',
+            'category': p.category if hasattr(p, 'category') else ''
+        })
+    except Product.DoesNotExist:
+        return JsonResponse({'error': 'Product not found'}, status=404)
+
+# ------------------------------
+# CART AND ORDER VIEWS
+# ------------------------------
 
 @csrf_exempt
 def get_cart(request, user_id):
@@ -119,7 +133,7 @@ def get_cart(request, user_id):
                     "id": item.product.id,
                     "name": item.product.name,
                     "price": str(item.product.price),
-                    "image": item.product.image.url if item.product.image else ""
+                    "image": request.build_absolute_uri(item.product.image.url) if item.product.image else ""
                 },
                 "quantity": item.quantity
             }
@@ -146,7 +160,7 @@ def add_to_cart(request):
             return JsonResponse({'message': 'Added to cart'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-        
+
 @csrf_exempt
 def remove_from_cart(request):
     if request.method == "POST":
@@ -160,7 +174,6 @@ def remove_from_cart(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 
-
 @csrf_exempt
 def checkout(request):
     if request.method == "POST":
@@ -173,7 +186,8 @@ def checkout(request):
             if not items.exists():
                 return JsonResponse({"error": "Cart is empty"}, status=400)
 
-            order = Order.objects.create(user=user)
+            order = Order.objects.create(user=user, total=0, is_paid=False)
+            total = 0
             for item in items:
                 OrderItem.objects.create(
                     order=order,
@@ -181,37 +195,18 @@ def checkout(request):
                     quantity=item.quantity,
                     price=item.product.price
                 )
+                total += item.product.price * item.quantity
+
+            order.total = total
+            order.save()
+
             items.delete()
+
             return JsonResponse({"message": "Order placed successfully"})
+
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 
-def product_list(request):
-    products = Product.objects.all()
-    return JsonResponse([
-        {
-            'id': p.id,
-            'name': p.name,
-            'price': str(p.price),
-            'description': p.description,
-            'image': p.image.url if p.image else ''
-        }
-        for p in products
-    ], safe=False)
-
-def product_detail(request, product_id):
-    try:
-        p = Product.objects.get(id=product_id)
-        return JsonResponse({
-            'id': p.id,
-            'name': p.name,
-            'price': str(p.price),
-            'description': p.description,
-            'image': p.image.url if p.image else ''
-        })
-    except Product.DoesNotExist:
-        return JsonResponse({'error': 'Product not found'}, status=404)
-    
 @csrf_exempt
 def order_history(request, user_id):
     try:
@@ -222,17 +217,24 @@ def order_history(request, user_id):
             order_data = {
                 "id": order.id,
                 "created_at": order.created_at,
+                "total": str(order.total),
+                "is_paid": order.is_paid,
                 "items": [
                     {
-                        "name": item.product.name,
+                        "product": {
+                            "id": item.product.id,
+                            "name": item.product.name,
+                            "image": request.build_absolute_uri(item.product.image.url) if item.product.image else ""
+                        },
                         "quantity": item.quantity,
-                        "price": str(item.price),
-                        "image": item.product.image.url if item.product.image else ""
+                        "price": str(item.price)
                     }
                     for item in items
                 ]
             }
             response.append(order_data)
+
         return JsonResponse(response, safe=False)
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
