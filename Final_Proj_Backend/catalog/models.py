@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+CATEGORY_CHOICES = [
+    ('men', 'Men'),
+    ('women', 'Women'),
+    ('kid', 'Kid'),
+]
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
