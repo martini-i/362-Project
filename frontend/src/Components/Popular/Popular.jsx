@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import './Popular.css';
 import { Item } from '../Item/Item';
 
+const apiBase = process.env.REACT_APP_API_BASE;
+
 export const Popular = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/products/')
+    fetch(`${apiBase}/products/`)
       .then(res => res.json())
-      .then(data => setProducts(data));
+      .then(data => setProducts(data))
+      .catch(err => console.error("Failed to fetch products", err));
   }, []);
 
   return (

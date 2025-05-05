@@ -9,7 +9,7 @@ const ShopContextProvider = (props) => {
 
   // Fetch products and initialize cart
   useEffect(() => {
-    apiFetch("/api/products/")
+    apiFetch("/products/")
       .then((data) => {
         setProducts(data);
         const cart = {};

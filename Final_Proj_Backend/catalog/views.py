@@ -33,12 +33,19 @@ def signup_view(request):
 
             user = User.objects.create_user(username=username, password=password, email=email)
             UserProfile.objects.create(user=user)
-            return JsonResponse({'message': 'User registered successfully'})
+
+            # Automatically login the user after signup
+            login(request, user)
+
+            return JsonResponse({
+                'message': 'User registered successfully',
+                'user_id': user.id
+            })
+
         except Exception as e:
             import traceback
-            print(traceback.format_exc())  # ← Add this line
+            print(traceback.format_exc())
             return JsonResponse({'error': str(e)}, status=500)
-
 
 @csrf_exempt
 def login_view(request):
@@ -51,7 +58,15 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
-                return JsonResponse({'message': 'Login successful', 'user_id': user.id})
+
+                return JsonResponse({
+                    'message': 'Login successful',
+                    'user': {
+                        'id': user.id,
+                        'username': user.username,
+                        'email': user.email
+                    }
+                })
             else:
                 return JsonResponse({'error': 'Invalid credentials'}, status=400)
         except Exception as e:

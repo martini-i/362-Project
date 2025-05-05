@@ -1,18 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CartItems from '../Components/CartItems/CartItems';
 
 const apiBase = process.env.REACT_APP_API_BASE;
 
-export const Cart = () => {
+const Cart = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(null); // null = loading, false = not logged in, true = logged in
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
     }
-  }, [navigate]);
+  }, []);
 
   const handleCheckout = async () => {
     const token = localStorage.getItem("token");
@@ -43,6 +46,21 @@ export const Cart = () => {
       alert("Something went wrong.");
     }
   };
+
+  if (isLoggedIn === null) {
+    return <p>Loading...</p>;
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="text-center py-20">
+        <p>You must be logged in to view your cart.</p>
+        <button onClick={() => navigate("/login")} className="bg-blue-500 text-white px-4 py-2 rounded mt-4">
+          Login
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div>
