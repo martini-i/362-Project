@@ -1,27 +1,35 @@
 import React, { createContext, useState, useEffect } from "react";
 
-// Create context
 export const AuthContext = createContext();
 
-// Provider
 const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  // Load user from localStorage on first mount
   useEffect(() => {
-    // Check localStorage for user on load
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (err) {
-        console.error("Invalid user data", err);
-        setUser(null);
-      }
+    const savedUser = localStorage.getItem("user");
+    if (savedUser && savedUser !== "undefined") {
+      setUser(JSON.parse(savedUser));
     }
+    setLoading(false);
   }, []);
 
+  const login = (userData) => {
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  };
+
+  if (loading) return null; // Prevent rendering while loading user
+
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

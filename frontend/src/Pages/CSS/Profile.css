@@ -1,0 +1,76 @@
+.profile-container {
+    padding: 40px;
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+  }
+  
+  .profile-container h1 {
+    margin-bottom: 20px;
+  }
+  
+  .profile-container h2 {
+    margin-top: 40px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-container button {
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #ff4040;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .order-error {
+    color: red;
+  }
+  
+  .order-list {
+    margin-top: 20px;
+  }
+  
+  .order-card {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .order-card h3 {
+    margin-bottom: 10px;
+  }
+  
+  .order-card span.paid {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .order-card span.pending {
+    color: orange;
+    font-weight: bold;
+  }
+  
+  .order-items {
+    margin-top: 10px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+  }
+  
+  .order-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .order-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  

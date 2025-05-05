@@ -4,31 +4,31 @@ import logo from '../Assets/Pursuit Logo.png';
 import cart_icon from '../Assets/cart_icon.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShopContext } from '../../Context/ShopContext';
-import { AuthContext } from '../../Context/AuthContext.jsx';
+import { AuthContext } from '../../Context/AuthContext';
 
 const Navbar = () => {
   const { getTotalCartItems } = useContext(ShopContext);
-  const { user, setUser } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    setUser(null);
+    logout();
     navigate("/login");
   };
 
   return (
     <div className='navbar'>
-      <div className="nav-Pursuit Logo">
-        <Link to="/"><img src={logo} alt="logo" /></Link>
+      <div className="nav-logo" onClick={() => navigate("/")}>
+        <img src={logo} alt="logo" />
       </div>
+
       <ul className="nav-menu">
         <li><Link to="/">Shop</Link></li>
         <li><Link to="/mens">Men</Link></li>
         <li><Link to="/womens">Women</Link></li>
         <li><Link to="/kids">Kids</Link></li>
       </ul>
+
       <div className="nav-login-cart">
         {user ? (
           <>
@@ -36,9 +36,9 @@ const Navbar = () => {
             <button onClick={handleLogout}>Logout</button>
           </>
         ) : (
-          <Link to='/login'><button>Login</button></Link>
+          <Link to="/login"><button>Login</button></Link>
         )}
-        <Link to='/cart'><img src={cart_icon} alt="cart" /></Link>
+        <Link to="/cart"><img src={cart_icon} alt="cart" /></Link>
         <div className="nav-cart-count">{getTotalCartItems()}</div>
       </div>
     </div>
