@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const apiBase = process.env.REACT_APP_API_BASE;
+
 export default function OrderHistory() {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState('');
@@ -15,7 +17,7 @@ export default function OrderHistory() {
       return;
     }
 
-    fetch(`${import.meta.env.VITE_API_BASE}/orders/${userId}/`, {
+    fetch(`${apiBase}/orders/`, {
       headers: {
         Authorization: `Token ${token}`
       }

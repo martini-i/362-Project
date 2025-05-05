@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const apiBase = process.env.REACT_APP_API_BASE;
+
 export default function Profile() {
   const [profile, setProfile] = useState({ email: '', phone: '', bio: '' });
   const [error, setError] = useState('');
@@ -14,7 +16,7 @@ export default function Profile() {
       return;
     }
 
-    fetch(`${import.meta.env.VITE_API_BASE}/profile/`, {
+    fetch(`${apiBase}/profile/`, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -36,7 +38,7 @@ export default function Profile() {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/profile/`, {
+      const res = await fetch(`${apiBase}/profile/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

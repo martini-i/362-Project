@@ -4,6 +4,9 @@
 ## Product Vision
 Pursuit athletics pushes athletes beyond their limits to pursue victory. With a wide arrange of sports wear, Pursuit keeps you cool while providing game changing performance. Pursuit sees the game differently, we provide the highest quality wear so you can pursuit like no other. If you need that last push, pursue no other than Pursuit Athletics.
 
+## Instructions to run app:
+
+
 ## Functional Requirements
 | ID  | Title                        | Description  |
 |-------|------------------------------|-------------|
