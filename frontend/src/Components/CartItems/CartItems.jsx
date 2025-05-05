@@ -5,46 +5,73 @@ const CartItems = () => {
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0);
   const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('user_id'); // Make sure this is set at login
+
+  const fetchCart = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/cart/${userId}/`, {
+        headers: {
+          'Authorization': `Token ${token}`,
+        }
+      });
+      const data = await res.json();
+      setItems(data.items);
+      setTotal(data.total_price);
+    } catch (err) {
+      console.error('Failed to load cart:', err);
+    }
+  };
 
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE}/cart/`, {
-          headers: {
-            'Authorization': `Token ${token}`,
-          }
-        });
-        const data = await res.json();
-        setItems(data.items);
-        setTotal(data.total_price);
-      } catch (err) {
-        console.error('Failed to load cart:', err);
-      }
-    };
-
-    fetchCart();
-  }, [token]);
+    if (userId && token) {
+      fetchCart();
+    }
+  }, [token, userId]);
 
   const removeItem = async (productId) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/cart/remove/`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/remove-from-cart/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`
         },
-        body: JSON.stringify({ product_id: productId })
+        body: JSON.stringify({ product_id: productId, user_id: userId })
       });
 
       if (res.ok) {
         // Refresh cart
-        setItems(items.filter(item => item.product.id !== productId));
+        fetchCart();
       } else {
         const data = await res.json();
         alert(data.error || "Failed to remove item");
       }
     } catch (err) {
       console.error('Remove failed:', err);
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/checkout/`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id: userId }) // match your Django backend expectations
+      });
+  
+      if (res.ok) {
+        alert("Order placed successfully!");
+        setItems([]);
+        setTotal(0);
+      } else {
+        const data = await res.json();
+        alert(data.error || "Checkout failed");
+      }
+    } catch (err) {
+      console.error("Checkout failed:", err);
     }
   };
 
@@ -70,6 +97,7 @@ const CartItems = () => {
             ))}
           </ul>
           <h3>Total: ${total}</h3>
+          <button onClick={handleCheckout}>Proceed to Checkout</button>
         </>
       )}
     </div>

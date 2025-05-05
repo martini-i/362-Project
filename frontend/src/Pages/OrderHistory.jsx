@@ -10,7 +10,9 @@ export default function OrderHistory() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    const userId = localStorage.getItem("user_id");
+
+    if (!token || !userId) {
       navigate("/login");
       return;
     }
@@ -24,29 +26,35 @@ export default function OrderHistory() {
         if (!res.ok) throw new Error("Unauthorized");
         return res.json();
       })
-      .then(setOrders)
+      .then(data => setOrders(data.orders))
       .catch(() => setError("Failed to load orders"));
   }, [navigate]);
 
-  if (error) return <p>{error}</p>;
-  if (!orders.length) return <p>No orders found.</p>;
+  if (error) return <p className="text-red-500 p-4">{error}</p>;
+  if (!orders.length) return <p className="p-4">No orders found.</p>;
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Order History</h1>
       {orders.map(order => (
-        <div key={order.id} className="border p-4 mb-4 rounded">
+        <div key={order.id} className="border p-4 mb-4 rounded shadow-sm">
           <h2 className="font-semibold mb-2">Order #{order.id}</h2>
           <p className="text-sm text-gray-500">Placed: {new Date(order.created_at).toLocaleString()}</p>
-          {order.items.map((item, i) => (
-            <div key={i} className="flex items-center gap-4 py-2 border-b">
-              <img src={item.product.image} alt={item.product.name} className="w-12 h-12 object-cover" />
-              <div>
-                <p>{item.product.name}</p>
-                <p className="text-sm">Qty: {item.quantity} × ${item.price}</p>
+          <p className="text-sm text-gray-600 mb-2">Total: ${order.total}</p>
+          <p className={`text-sm font-medium ${order.is_paid ? 'text-green-600' : 'text-yellow-600'}`}>
+            {order.is_paid ? 'Paid' : 'Pending Payment'}
+          </p>
+          <div className="mt-3 divide-y">
+            {order.items.map((item, i) => (
+              <div key={i} className="flex items-center gap-4 py-2">
+                <img src={item.product.image} alt={item.product.name} className="w-12 h-12 object-cover rounded" />
+                <div>
+                  <p>{item.product.name}</p>
+                  <p className="text-sm text-gray-500">Qty: {item.quantity} × ${item.price}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ))}
     </div>
