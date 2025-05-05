@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ShopContext } from '../Context/ShopContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,38 +6,33 @@ const Checkout = () => {
   const { cartItems = {}, getTotalCartAmount = () => 0 } = useContext(ShopContext) || {};
   const navigate = useNavigate();
 
-  let user;
-  try {
-    user = JSON.parse(localStorage.getItem("user"));
-  } catch {
-    user = null;
-  }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleCheckout = async () => {
-    if (!user) {
+    const token = localStorage.getItem("token");
+    if (!token) {
       alert("Please log in to proceed with checkout.");
       return navigate("/login");
     }
 
-    const cart = Object.entries(cartItems)
-      .filter(([_, quantity]) => quantity > 0)
-      .map(([productId, quantity]) => ({
-        product_id: parseInt(productId),
-        quantity: quantity
-      }));
-
-    if (cart.length === 0) {
+    const hasItems = Object.values(cartItems).some(qty => qty > 0);
+    if (!hasItems) {
       alert("Cart is empty.");
       return;
     }
 
     try {
-      const response = await fetch("/api/checkout/", {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE}/checkout/`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ user_id: user.user_id })
+          "Content-Type": "application/json",
+          "Authorization": `Token ${token}`
+        }
       });
 
       const data = await response.json();
