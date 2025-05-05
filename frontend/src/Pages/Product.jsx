@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { apiFetch } from '../lib/api';// small wrapper around fetch that prepends VITE_API_BASE_URL
+import { apiFetch } from '../lib/api';
+
+const apiBase = process.env.REACT_APP_API_BASE;
 
 // Basic spinner; swap with your own component if you have one
 function Spinner({ children }) {

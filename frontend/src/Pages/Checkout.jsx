@@ -2,6 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import { ShopContext } from '../Context/ShopContext';
 import { useNavigate } from 'react-router-dom';
 
+const apiBase = process.env.REACT_APP_API_BASE;
+
 const Checkout = () => {
   const { cartItems = {}, getTotalCartAmount = () => 0 } = useContext(ShopContext) || {};
   const navigate = useNavigate();
@@ -27,7 +29,7 @@ const Checkout = () => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE}/checkout/`, {
+      const response = await fetch(`${apiBase}/checkout/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

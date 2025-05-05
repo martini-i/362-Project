@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CartItems from '../Components/CartItems/CartItems';
 
+const apiBase = process.env.REACT_APP_API_BASE;
+
 export const Cart = () => {
   const navigate = useNavigate();
 
@@ -20,7 +22,7 @@ export const Cart = () => {
     }
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/checkout/`, {
+      const res = await fetch(`${apiBase}/checkout/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

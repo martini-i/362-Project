@@ -1,6 +1,7 @@
+const apiBase = process.env.REACT_APP_API_BASE;
 const handleLogin = async () => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_API_BASE}/login/`, {
+    const res = await fetch(`${apiBase}/login/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(loginData)
