@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './CartItems.css';
 
+const apiBase = process.env.REACT_APP_API_BASE;
+
 const CartItems = () => {
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0);
@@ -9,7 +11,7 @@ const CartItems = () => {
 
   const fetchCart = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/cart/${userId}/`, {
+      const res = await fetch(`${apiBase}/cart/${userId}/`, {
         headers: {
           'Authorization': `Token ${token}`,
         }
@@ -30,7 +32,7 @@ const CartItems = () => {
 
   const removeItem = async (productId) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/remove-from-cart/`, {
+      const res = await fetch(`${apiBase}/remove-from-cart/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +55,7 @@ const CartItems = () => {
 
   const handleCheckout = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/checkout/`, {
+      const res = await fetch(`${apiBase}/checkout/`, {
         method: 'POST',
         headers: {
           'Authorization': `Token ${token}`,
